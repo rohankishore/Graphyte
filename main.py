@@ -1,7 +1,8 @@
 import sys
 import qdarktheme
+from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QDockWidget, QVBoxLayout, QWidget, QLineEdit, QListWidget, \
-    QAbstractItemView
+    QAbstractItemView, QHBoxLayout, QToolBar
 from PyQt6.QtCore import Qt
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
@@ -17,6 +18,25 @@ class Graphite(QMainWindow):
 
         self.setWindowTitle("Graphite.")
         self.setGeometry(100, 100, 800, 600)
+
+        self.toolbox = QToolBar(self)
+        self.toolbox.setFixedHeight(40)
+        #self.addToolBar(self.toolbox)
+
+        move = QAction("Move", self)
+        move.triggered.connect(self._move)
+        move.setIcon(QIcon("resources/icons/move.png"))
+        save = QAction("Save", self)
+        save.triggered.connect(self._save)
+        save.setIcon(QIcon("resources/icons/save.png"))
+
+        # Connect actions to their respective functions
+       # action1.triggered.connect(self.on_button1_click)
+        #action2.triggered.connect(self.on_button2_click)
+
+        # Add actions to the toolbar
+        self.toolbox.addAction(move)
+        self.toolbox.addAction(save)
 
         # Create the central widget that holds the graphing area and input bar
         self.central_widget = QWidget(self)
@@ -38,7 +58,7 @@ class Graphite(QMainWindow):
         self.function_list_widget = QListWidget()
         self.function_list_widget.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self.function_list_widget.itemSelectionChanged.connect(
-            self.remove_selected_function)  # Connect to remove function
+            self.listboxActions)  # Connect to remove function
         dock_layout.addWidget(self.function_list_widget)
 
         # Set the contents of the dock widget
@@ -49,6 +69,7 @@ class Graphite(QMainWindow):
 
         # Create the graphing area on the right
         self.graph_widget = MatplotlibWidget(self)
+        central_layout.addWidget(self.toolbox)
         central_layout.addWidget(self.graph_widget)
 
         # Create an input bar below the graphing area
@@ -59,11 +80,22 @@ class Graphite(QMainWindow):
         # List to hold user-entered functions
         self.functions = []
 
+    def listboxActions(self):
+        delete_action = QAction("Delete", self)
+        delete_action.setShortcut(Qt.Key.Key_Delete)
+        delete_action.triggered.connect(self.remove_selected_function)
+        self.addAction(delete_action)  # Add action to main window
+
     def update_graph(self):
         function_text = self.input_bar.text()
-        self.functions.append(function_text)  # Append the entered function to the list
-        self.function_list_widget.addItem(function_text)  # Add function name to the list widget
-        self.graph_widget.plot_function(self.functions)  # Pass the list of functions
+        self.functions.append(function_text)
+        self.graph_widget.plot_function(self.functions)
+
+    def _move(self):
+        self.graph_widget.toolbar.pan(True)
+
+    def _save(self):
+        self.graph_widget.toolbar.save_figure()
 
     def remove_selected_function(self):
         selected_items = self.function_list_widget.selectedItems()
@@ -72,7 +104,7 @@ class Graphite(QMainWindow):
             row = self.function_list_widget.row(selected_items[0])
             self.function_list_widget.takeItem(row)
             self.functions.remove(selected_item_text)
-            self.graph_widget.plot_function(self.functions)  # Replot without the removed function
+            self.graph_widget.plot_function(self.functions)
 
 
 class MatplotlibWidget(QWidget):
@@ -82,10 +114,11 @@ class MatplotlibWidget(QWidget):
         self.figure, self.axis = plt.subplots()
         self.canvas = FigureCanvas(self.figure)
         layout = QVBoxLayout()
+        self.parent = parent
         layout.addWidget(self.canvas)
         self.setLayout(layout)
 
-        toolbar = NavigationToolbar2QT(self.canvas, self)
+        self.toolbar = NavigationToolbar2QT(self.canvas, self)
 
         # Add interactive features for panning and zooming
         plt.ioff()  # Turn interactive mode off
@@ -95,13 +128,14 @@ class MatplotlibWidget(QWidget):
     def plot_function(self, functions):
         self.axis.clear()
         try:
-            x = np.linspace(-10, 10, 400)
+            x = np.linspace(-20, 20, 400)
             for function_text in functions:
                 y = eval(function_text)
                 self.axis.plot(x, y, label=function_text)  # Add a label for each function
             plt.grid()
             self.axis.legend()  # Add legend to the plot
             self.canvas.draw()
+            self.parent.function_list_widget.addItem(function_text)
         except Exception as e:
             print("Error:", e)
 
