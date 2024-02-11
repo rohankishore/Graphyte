@@ -3,7 +3,7 @@
 
   <h1 align="center"> Graphene. 📈 </h1>
   
-![banner](https://github.com/rohankishore/Graphite/assets/109947257/d48ae304-abdd-4d3e-b3a1-d2858fa4b71f)
+![banner (1)](https://github.com/rohankishore/Graphene/assets/109947257/01cc445a-09ee-4187-b870-83eae0ce40bf)
 
   <p align="center">
     Graphene. is a Python-based graphing application built with PyQt6 and Matplotlib inspired by GeoGebra, designed to provide users with an intuitive interface for creating and visualizing mathematical functions and data sets.
