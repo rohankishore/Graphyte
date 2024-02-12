@@ -3,4 +3,4 @@ mpl_interactions==0.24.1
 numpy==1.25.0
 PyQt6==6.6.1
 PyQt6_sip==13.6.0
-
+pyqtdarktheme==2.1.0
