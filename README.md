@@ -19,7 +19,7 @@
 
 Graphyte. offers a similar interface to that of GeoGebra. A dock on the left side, a toolbar on top, and a graphing area on the right side.
 
-![image](https://github.com/rohankishore/Graphite/assets/109947257/9e292006-85cf-4cbd-adc5-7f277603bb23) ![image](https://github.com/rohankishore/Graphite/assets/109947257/f9438b5a-e755-4d03-ad80-b95f81f4e7cc)
+![image](https://github.com/rohankishore/Graphyte./assets/109947257/e5d98abb-ea99-44dc-b3fa-b5214b3c44e8)
 
 
 <br>
