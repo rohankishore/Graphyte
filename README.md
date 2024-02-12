@@ -3,7 +3,7 @@
 
   <h1 align="center"> Graphyte. 📈 </h1>
   
-![banner (1)](https://github.com/rohankishore/Graphene/assets/109947257/01cc445a-09ee-4187-b870-83eae0ce40bf)
+![banner (2)](https://github.com/rohankishore/Graphyte./assets/109947257/118232d5-05a7-41c7-8a25-98789acdf85b)
 
   <p align="center">
     Graphyte. is a Python-based graphing application built with PyQt6 and Matplotlib inspired by GeoGebra, designed to provide users with an intuitive interface for creating and visualizing mathematical functions and data sets.
