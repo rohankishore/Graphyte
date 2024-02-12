@@ -1,12 +1,12 @@
 <!-- PROJECT LOGO -->
 <div align="center">
 
-  <h1 align="center"> Graphene. 📈 </h1>
+  <h1 align="center"> Graphyte. 📈 </h1>
   
 ![banner (1)](https://github.com/rohankishore/Graphene/assets/109947257/01cc445a-09ee-4187-b870-83eae0ce40bf)
 
   <p align="center">
-    Graphene. is a Python-based graphing application built with PyQt6 and Matplotlib inspired by GeoGebra, designed to provide users with an intuitive interface for creating and visualizing mathematical functions and data sets.
+    Graphyte. is a Python-based graphing application built with PyQt6 and Matplotlib inspired by GeoGebra, designed to provide users with an intuitive interface for creating and visualizing mathematical functions and data sets.
   </p>
 
   <a style="text-decoration:none">
@@ -17,7 +17,7 @@
 
 ## Interface 🖥️
 
-Graphene. offers a similar interface to that of GeoGebra. A dock on the left side, a toolbar on top, and a graphing area on the right side.
+Graphyte. offers a similar interface to that of GeoGebra. A dock on the left side, a toolbar on top, and a graphing area on the right side.
 
 ![image](https://github.com/rohankishore/Graphite/assets/109947257/9e292006-85cf-4cbd-adc5-7f277603bb23) ![image](https://github.com/rohankishore/Graphite/assets/109947257/f9438b5a-e755-4d03-ad80-b95f81f4e7cc)
 
@@ -26,7 +26,7 @@ Graphene. offers a similar interface to that of GeoGebra. A dock on the left sid
 
 ## Features 📃
 
-Since Graphene. is a new Graphing software, the list of the current features is pretty limited. But I'm focused on implementing more and more features to get it to GeoGebra's level, although that would require much more time. In the meantime, here are the current features:
+Since Graphyte. is a new Graphing software, the list of the current features is pretty limited. But I'm focused on implementing more and more features to get it to GeoGebra's level, although that would require much more time. In the meantime, here are the current features:
 - Multiple function graphing
 - Option to Save the plot
 - Pan, Zoom, Customize the graphs
@@ -35,15 +35,15 @@ Since Graphene. is a new Graphing software, the list of the current features is 
 
 ## Get Started ⭐
 
-Let's set up Graphite. on your PC!
+Let's set up Graphyte. on your PC!
 
 ### With EXE
 
-_Below is a detailed procedure of how you can install Graphene. EXE_
+_Below is a detailed procedure of how you can install Graphyte. EXE_
 
 - Download the ZIP file from the latest release from the Releases page
 - Unzip the file and open it
-- Double-click on "Graphene.exe"
+- Double-click on "Graphyte.exe"
 - Enjoy 😉
 
 ### Manual Installation
@@ -63,7 +63,7 @@ Run this command in your terminal to install the dependencies at once
 
 ## Roadmap 🛣️
 
-Graphene. is a hobby project and is developed by only a single 17-year-old person. The development of the project may get staggered if I get busy due to any personal circumstances, or if I run out of money to manage all the hardware gears. Here are some anticipated features that I plan to implement soon:
+Graphyte. is a hobby project and is developed by only a single 17-year-old person. The development of the project may get staggered if I get busy due to any personal circumstances, or if I run out of money to manage all the hardware gears. Here are some anticipated features that I plan to implement soon:
 - Custom theming
 - Support for plotting points, circles, and other conics
 - Sliders, lines, etc
