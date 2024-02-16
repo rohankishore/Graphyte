@@ -2,7 +2,7 @@ import sys
 import qdarktheme
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QDockWidget, QVBoxLayout, QWidget, QLineEdit, QListWidget, \
-    QAbstractItemView, QToolBar, QStatusBar, QSizePolicy
+    QAbstractItemView, QToolBar, QStatusBar, QSizePolicy, QMenu
 from PyQt6.QtCore import Qt
 from GraphWidget import MatplotlibWidget
 
@@ -22,19 +22,32 @@ class Graphite(QMainWindow):
         self.bottom_bar = QStatusBar()
         self.setStatusBar(self.bottom_bar)
 
+        move_menu = QMenu(self)
+        move_menu.addAction("Pan", self._move)
+        move_menu.addAction("Zoom", self._zoom)
+
+        circle_menu = QMenu(self)
+        circle_menu.addAction("Circle with Center and Radius")
+
         move = QAction("Move", self)
+        move.setMenu(move_menu)
         move.triggered.connect(self._move)
         move.setIcon(QIcon("resources/icons/move.png"))
+
         save = QAction("Save", self)
         save.triggered.connect(self._save)
         save.setIcon(QIcon("resources/icons/save.png"))
 
-        # Connect actions to their respective functions
-        # action1.triggered.connect(self.on_button1_click)
-        # action2.triggered.connect(self.on_button2_click)
+        circle = QAction("Circle", self)
+        circle.setMenu(circle_menu)
+        circle.triggered.connect(self._move)
+        circle.setIcon(QIcon("resources/icons/circle.png"))
 
         # Add actions to the toolbar
         self.toolbox.addAction(move)
+        self.toolbox.addSeparator()
+        self.toolbox.addAction(circle)
+        self.toolbox.addSeparator()
         self.toolbox.addAction(save)
 
         # Create the central widget that holds the graphing area and input bar
@@ -104,6 +117,9 @@ class Graphite(QMainWindow):
 
     def _move(self):
         self.graph_widget.toolbar.pan(True)
+
+    def _zoom(self):
+        self.graph_widget.toolbar.zoom(True)
 
     def _save(self):
         self.graph_widget.toolbar.save_figure()
