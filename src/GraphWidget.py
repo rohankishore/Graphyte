@@ -7,7 +7,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 # math functions
-# from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan
+from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan
 
 from mpl_interactions import panhandler, zoom_factory
 
@@ -48,38 +48,63 @@ class MatplotlibWidget(QWidget):
 
         zoom_factory(self.axis, base_scale=1.1)
 
+    def format_function_input(self, function_text):
+        function_text = re.sub(r'(?<![a-zA-Z])sin(?![a-zA-Z])', 'sin(', function_text)
+        function_text = re.sub(r'(?<![a-zA-Z])cos(?![a-zA-Z])', 'cos(', function_text)
+        function_text = re.sub(r'(?<![a-zA-Z])tan(?![a-zA-Z])', 'tan(', function_text)
+
+        # Ensure all opened parentheses are properly closed
+        # Count opened and closed parentheses
+        open_parens = function_text.count('(')
+        close_parens = function_text.count(')')
+
+        # If there are unmatched opening parentheses, close them
+        if open_parens > close_parens:
+            function_text += ')' * (open_parens - close_parens)
+
+        return function_text
+
     def plot_function(self, functions):
         self.axis.clear()
         self.functions.clear()  # Clear the stored functions
         try:
-            x = np.linspace(-1, 1, 100)  # Adjust the number of points for smoother plots
+            x = np.linspace(-10, 10, 1000)  # Wider range for plotting
             for function_text in functions:
-                if '=' in function_text:
-                    variable, expression = function_text.split('=')
-                    variable = variable.strip()
-                    plt.grid()
-                    expression = expression.strip()
-                    self.functions[variable] = expression  # Store the function expression
-                    locals()[variable] = eval(expression)
-                    self.axis.plot(x, eval(expression), label=function_text)
-                else:
-                    plt.grid(True)
-                    try:
-                        function_text = function_text.replace(function_text, ('np.'+function_text))
-                        y = eval(function_text)
+                try:
+                    function_text = self.format_function_input(function_text)  # Format input
+
+                    if '=' in function_text:
+                        variable, expression = function_text.split('=')
+                        variable = variable.strip()
+                        expression = expression.strip()
+
+                        # Replace '^' with '**' for exponentiation
+                        expression = expression.replace('^', '**')
+                        self.functions[variable] = expression  # Store the function expression
+
+                        # Evaluate the expression using numpy
+                        y = eval(expression, {'np': np, 'x': x, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan})
                         self.axis.plot(x, y, label=function_text)
-                    except Exception as e:
-                        msgBox = QMessageBox()
-                        msgBox.setIcon(QMessageBox.Icon.Warning)
-                        msgBox.setText(str(e))
-                        msgBox.setWindowTitle("Uh-Oh!")
-                        msgBox.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
-                        msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
-                        msgBox.exec()
+                    else:
+                        # Treat the function as a standalone expression
+                        function_text = function_text.replace('^', '**')
+                        y = eval(function_text, {'np': np, 'x': x, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan})
+                        self.axis.plot(x, y, label=function_text)
+
+                except Exception as e:
+                    msgBox = QMessageBox()
+                    msgBox.setIcon(QMessageBox.Icon.Warning)
+                    msgBox.setText(f"Error plotting function '{function_text}': {e}")
+                    msgBox.setWindowTitle("Uh-Oh!")
+                    msgBox.setStandardButtons(QMessageBox.StandardButton.Ok)
+                    msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
+                    msgBox.exec()
 
             plt.grid(True)
-            self.axis.legend()
+            if self.axis.get_legend_handles_labels()[0]:  # Check if there are handles for the legend
+                self.axis.legend()  # Only call legend if there are items to display
             self.canvas.draw()
+
         except Exception as e:
             msgBox = QMessageBox()
             msgBox.setIcon(QMessageBox.Icon.Warning)
@@ -120,21 +145,14 @@ class MatplotlibWidget(QWidget):
                     func2_name = ''
                     func2_expr = func2_text.strip()
 
-                try:
-                    func1_values = eval(func1_expr, {'np': np, 'x': x_values})
-                    func2_values = eval(func2_expr, {'np': np, 'x': x_values})
+               # try:
+                func1_values = eval(func1_expr, {'np': np, 'x': x_values})
+                func2_values = eval(func2_expr, {'np': np, 'x': x_values})
 
-                    intersection_indices = np.where(np.isclose(func1_values, func2_values, atol=0.01))[0]
-                    for index in intersection_indices:
-                        intersection_points.append((x_values[index], func1_values[index]))
-                except Exception as e:
-                    msgBox = QMessageBox()
-                    msgBox.setIcon(QMessageBox.Icon.Warning)
-                    msgBox.setText(str(e))
-                    msgBox.setWindowTitle("Uh-Oh!")
-                    msgBox.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
-                    msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
-                    msgBox.exec()
+                intersection_indices = np.where(np.isclose(func1_values, func2_values, atol=0.01))[0]
+                for index in intersection_indices:
+                    intersection_points.append((x_values[index], func1_values[index]))
+
 
         if intersection_points:
             print("Intersection points:", intersection_points)
