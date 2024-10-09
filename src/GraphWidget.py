@@ -7,7 +7,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 # math functions
-from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan, abs
+#from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan, abs, log, log10, log2
 
 from mpl_interactions import panhandler, zoom_factory
 
@@ -65,14 +65,20 @@ class MatplotlibWidget(QWidget):
         return function_text
 
     def plot_function(self, functions):
+        """
+                Plot a list of functions provided by the user. Each function is
+                processed and evaluated using NumPy.
+                """
         self.axis.clear()
         self.functions.clear()  # Clear the stored functions
         try:
             x = np.linspace(-10, 10, 1000)  # Wider range for plotting
             for function_text in functions:
                 try:
-                    function_text = self.format_function_input(function_text)  # Format input
+                    # Format the function input
+                    function_text = self.format_function_input(function_text)
 
+                    # Handle both variable assignment (e.g., y = sin(x)) and expressions (e.g., sin(x))
                     if '=' in function_text:
                         variable, expression = function_text.split('=')
                         variable = variable.strip()
@@ -82,22 +88,22 @@ class MatplotlibWidget(QWidget):
                         expression = expression.replace('^', '**')
                         self.functions[variable] = expression  # Store the function expression
 
-                        # Evaluate the expression using numpy
-                        y = eval(expression, {'np': np, 'x': x, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan})
+                        # Evaluate the expression dynamically using NumPy
+                        y = eval(expression, {'np': np, 'x': x, **np.__dict__})
                         self.axis.plot(x, y, label=function_text)
                     else:
                         # Treat the function as a standalone expression
                         function_text = function_text.replace('^', '**')
-                        y = eval(function_text, {'np': np, 'x': x, 'sin': np.sin, 'cos': np.cos, 'tan': np.tan})
+                        y = eval(function_text, {'np': np, 'x': x, **np.__dict__})
                         self.axis.plot(x, y, label=function_text)
 
                 except Exception as e:
+                    # Show error message if function evaluation fails
                     msgBox = QMessageBox()
                     msgBox.setIcon(QMessageBox.Icon.Warning)
                     msgBox.setText(f"Error plotting function '{function_text}': {e}")
                     msgBox.setWindowTitle("Uh-Oh!")
                     msgBox.setStandardButtons(QMessageBox.StandardButton.Ok)
-                    msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
                     msgBox.exec()
 
             plt.grid(True)
@@ -110,8 +116,7 @@ class MatplotlibWidget(QWidget):
             msgBox.setIcon(QMessageBox.Icon.Warning)
             msgBox.setText(str(e))
             msgBox.setWindowTitle("Uh-Oh!")
-            msgBox.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
-            msgBox.setDefaultButton(QMessageBox.StandardButton.Ok)
+            msgBox.setStandardButtons(QMessageBox.StandardButton.Ok)
             msgBox.exec()
 
     def find_intersections(self, selected_functions):
