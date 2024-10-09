@@ -94,6 +94,7 @@ class Graphite(QMainWindow):
 
         # Create the input bar
         self.input_bar = QLineEdit()
+        self.input_bar.setPlaceholderText("Input: ")
         self.input_bar.returnPressed.connect(self.update_graph)
         self.input_layout.addWidget(self.input_bar)
 
