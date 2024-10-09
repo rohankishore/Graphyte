@@ -7,7 +7,7 @@ from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT
 import matplotlib.pyplot as plt
 import numpy as np
 # math functions
-from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan
+from numpy import sin, cos, tan, sqrt, arcsin, arccos, arctan, abs
 
 from mpl_interactions import panhandler, zoom_factory
 
