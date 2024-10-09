@@ -2,10 +2,10 @@ import sys
 import qdarktheme
 from PyQt6.QtGui import QAction, QIcon
 from PyQt6.QtWidgets import QApplication, QMainWindow, QDockWidget, QVBoxLayout, QWidget, QLineEdit, QListWidget, \
-    QAbstractItemView, QToolBar, QStatusBar, QSizePolicy, QMenu, QHBoxLayout, QPushButton
+    QAbstractItemView, QToolBar, QStatusBar, QSizePolicy, QMenu, QHBoxLayout, QPushButton, QCompleter
 from PyQt6.QtCore import Qt
 from GraphWidget import MatplotlibWidget
-
+import values
 
 class Graphite(QMainWindow):
     def __init__(self):
@@ -94,8 +94,12 @@ class Graphite(QMainWindow):
 
         # Create the input bar
         self.input_bar = QLineEdit()
+        self.completer = QCompleter(values.functions)
+        self.completer.setCompletionMode(QCompleter.CompletionMode.PopupCompletion)
+        self.completer.activated.connect(self.on_completer_activated)
+        self.input_bar.setCompleter(self.completer)
         self.input_bar.setPlaceholderText("Input: ")
-        self.input_bar.returnPressed.connect(self.update_graph)
+        self.input_bar.returnPressed.connect(self.on_return_pressed)
         self.input_layout.addWidget(self.input_bar)
 
         # Create the keyboard button
@@ -119,7 +123,26 @@ class Graphite(QMainWindow):
         delete_action = QAction("Delete", self)
         delete_action.setShortcut(Qt.Key.Key_Delete)
         delete_action.triggered.connect(self.remove_selected_function)
-        self.addAction(delete_action)  # Add action to main window
+        self.addAction(delete_action)
+
+    def on_completer_activated(self, completion):
+        """
+        This method is called when an auto-complete suggestion is selected.
+        """
+        self.input_bar.setText(completion)
+        # Optional: Trigger graph update when selecting from completer, if desired
+        # self.update_graph()  # You can decide if you want this behavior
+
+    def on_return_pressed(self):
+        """
+        This method is called when Enter/Return is pressed.
+        Trigger graph update only if input wasn't from the completer.
+        """
+        # Check if completer's popup is visible (indicating a selection is in progress)
+        if self.completer.popup().isVisible():
+            return  # Ignore 'returnPressed' when completer is visible
+
+        self.update_graph()  # Trigger the graph update
 
     def update_graph(self):
         function_text = self.input_bar.text()
