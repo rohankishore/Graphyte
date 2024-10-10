@@ -20,6 +20,7 @@
 Graphyte. offers a similar interface to that of GeoGebra. A dock on the left side, a toolbar on top, and a graphing area on the right side.
 
 ![image](https://github.com/user-attachments/assets/568f4b48-e7cf-477b-8b46-9a7a6b5ef0df)
+![image](https://github.com/user-attachments/assets/2181ff3c-5d55-4a26-b902-df35dc9300fb)
 
 
 <br>
@@ -30,6 +31,7 @@ Since Graphyte. is a new Graphing software, the list of the current features is 
 - Multiple function graphing
 - Option to Save the plot
 - Dark Mode
+- Autocompletion
 - Support for Polynomials and Trigonometric and Inverse Trigonometric functions
 - Pan, Zoom, Customize the graphs
 
